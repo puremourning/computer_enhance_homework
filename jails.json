@@ -3,6 +3,10 @@
         {
             "entry": "/generator.jai",
             "local_modules": "/modules"
+        },
+        {
+            "entry": "/cacluator.jai",
+            "local_modules": "/modules"
         }
     ]
 }

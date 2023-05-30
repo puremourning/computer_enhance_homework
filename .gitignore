@@ -7,5 +7,10 @@
 # Reinstate vimspector stuff
 !.vimspector.json
 
+# Project stuff
+.vimspector.session
+Session.vim
+
 # Binaries
 generator
+calculator
