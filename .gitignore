@@ -1,0 +1,11 @@
+# Output
+.build/
+*.sp
+*.json
+*.dSYM/
+
+# Reinstate vimspector stuff
+!.vimspector.json
+
+# Binaries
+generator

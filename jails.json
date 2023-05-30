@@ -1,0 +1,8 @@
+{
+    "workspaces": [
+        {
+            "entry": "/generator.jai",
+            "local_modules": "/modules"
+        }
+    ]
+}
