@@ -24,6 +24,7 @@ Value :: struct {
 Parser :: struct {
   data: string;
   pos: s64;
+  current: string;
 }
 
 Parse_Result :: struct {
@@ -62,6 +63,7 @@ eat_whitespace :: inline ( using parser: *Parser ) {
 //   eat_whitespace( ) ; pos is first char of next token
 //   parse_something() ; pos is first char after the something
 advance :: inline ( using parser: *Parser, how_many: s64 = 1 ) {
+  advance( *current, how_many );
   pos += how_many;
 }
 
@@ -78,7 +80,7 @@ eat_if_token :: inline ( using parser: *Parser, token: u8 ) -> bool {
   loc := peek_next_token_pos( parser );
   if loc < data.count && data[ loc ] == token {
     // got it; eat it
-    pos = loc; // pos now points at the token we just found
+    advance( parser, loc - pos ); // pos now points at the token we just found
     advance( parser ); // eat the token
     return true;
   }
@@ -261,12 +263,20 @@ parse_number :: ( using parser : *Parser ) -> Value, Parse_Result {
     return .{}, failed( parser, "Expected digits in number" );
   }
 
-  // TODO: scientific notation?
-  // TODO: other notations?
-  if eat_if_token( parser, #char "." ) ||
-     eat_if_token( parser, #char "e" ) ||
+  if eat_if_token( parser, #char "." ) {
+    number.count += 1;
+    if !parse_digits() {
+      return .{}, failed( parser, "Expected digits after number sep" );
+    }
+  }
+
+  // exponent
+  if eat_if_token( parser, #char "e" ) ||
      eat_if_token( parser, #char "E" ) {
     number.count += 1;
+    if eat_if_token( parser, #char "-" ) || eat_if_token( parser, #char "+" ) {
+      number.count += 1;
+    }
     if !parse_digits() {
       return .{}, failed( parser, "Expected digits after number sep" );
     }

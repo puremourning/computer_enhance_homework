@@ -5,7 +5,7 @@
             "local_modules": "/modules"
         },
         {
-            "entry": "/cacluator.jai",
+            "entry": "/calculator.jai",
             "local_modules": "/modules"
         }
     ]

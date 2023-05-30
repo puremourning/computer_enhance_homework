@@ -83,14 +83,46 @@ main :: () {
 
   segments, distances, sum := generate( args );
 
-  package: SP.Create_Package;
-  defer SP.deinit( *package );
-  SP.init( *package );
-  SP.add( *package, "distances", xx distances );
-  SP.write( *package, "distances.sp" );
+  {
+    file, success := file_open( args.distances_file_name, true, false, true );
+    if !success {
+      log_error( "Unable to open disatances file % for writing\n",
+                 args.distances_file_name );
+      return;
+    }
+
+    defer file_close(*file);
+
+    success = file_write(*file, *distances.count, size_of( s64 ) );
+
+    if !success {
+      log_error("Unable to write len to file\n" );
+      return;
+    }
+
+    success = file_write(*file, *sum, size_of( float64 ) );
+
+    if !success {
+      log_error("Unable to write sum to file\n" );
+      return;
+    }
+
+    success = file_write( *file,
+                          distances.data,
+                          distances.count * size_of( s64 ) );
+
+    if !success {
+      log_error("Unable to write data to file\n" );
+      return;
+    }
+  }
+
+
+  print( "Wrote out % binary distances, too\n", distances.count );
 
   print_context := context;
   print_context.print_style.default_format_float.trailing_width = 17;
+  print_context.print_style.default_format_float.mode = .SHORTEST;
   push_context print_context {
     json_write_file( args.segments_file_name, Document.{ points = segments } );
     print( "The total sum was: %\n", sum );
@@ -100,6 +132,6 @@ main :: () {
 
 #import "jason";
 #import "Basic";
-SP :: #import "Simple_Package";
 #import "Command_Line";
+#import "File";
 
