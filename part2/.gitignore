@@ -6,6 +6,7 @@
 
 # Reinstate vimspector stuff
 !.vimspector.json
+!test.json
 
 # Project stuff
 .vimspector.session

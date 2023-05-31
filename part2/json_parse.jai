@@ -102,7 +102,7 @@ ok :: inline ( using parser: *Parser ) -> Parse_Result {
 parse_value :: ( using parser : *Parser ) -> Value, Parse_Result {
   eat_whitespace( parser );
   if is_eof( parser ) {
-    return Value.{}, Parse_Result.{ false, parser.pos, "Expected a value" };
+    return .{}, failed( parser, "Expected a value" );
   }
 
   value: Value;

@@ -19,6 +19,7 @@
           "command script import $HOME/Development/jai/lldb-jai/jaitype.py"
         ]
       }
-    }
+    },
+    "Run2":{"bool": true,"null": null,"adapter":"\"CodeLLDB \u012A \n\r foo\b\b \f \\ \"bar\""}
   }
 }
