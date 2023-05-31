@@ -3,7 +3,6 @@ Args :: struct {
   distances_file_name := "distances.sp";
 }
 
-
 main :: () {
   cmdline_ok, args := parse_arguments(
     Args,
@@ -115,61 +114,6 @@ main :: () {
     print( "The sum was %\n", sum );
     if sum != expected_sum {
       print( "The sum did not match expected %\n", expected_sum );
-    }
-  }
-}
-
-print_value :: ( val: Value ) {
-  builder : String_Builder;
-  defer free_buffers( *builder );
-
-  print_value_to_builder( *builder, val );
-  append( *builder, "\n" );
-  print( builder_to_string( *builder ) );
-}
-
-print_value_to_builder :: ( builder: *String_Builder,
-                            val: Value,
-                            indent: s16 = 0 ) {
-  pindent :: ( builder: *String_Builder, indent: s16 ) {
-    for 0..indent-1 {
-      append( builder, " " );
-    }
-  }
-  if #complete val.kind == {
-    case .STRING; {
-      print_to_builder( builder, "%", val.str_val );
-    }
-    case .NUMBER; {
-      print_to_builder( builder, "%", val.num_val );
-    }
-    case .OBJECT; {
-      append( builder, "{\n" );
-      for val.obj_val {
-        pindent( builder, indent + 2 );
-        print_to_builder( builder, "% := ", it_index );
-        print_value_to_builder( builder, it, indent + 4 );
-        append( builder, ",\n" );
-      }
-      pindent( builder, indent );
-      append( builder, "}" );
-    }
-    case .ARRAY; {
-      append( builder, "[\n" );
-      for val.arr_val {
-        pindent( builder, indent + 2 );
-        print_to_builder( builder, "[%] := ", it_index );
-        print_value_to_builder( builder, it, indent + 4 );
-        append( builder, ",\n" );
-      }
-      pindent( builder, indent );
-      append( builder, "]" );
-    }
-    case .NULL; {
-      append( builder, "NULL" );
-    }
-    case .BOOLEAN; {
-      append( builder, ifx val.bool_val "true" else "false" );
     }
   }
 }

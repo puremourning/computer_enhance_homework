@@ -1,0 +1,24 @@
+{
+  "configurations": {
+    "Run": {
+      "bool": true,
+      "null": null,
+      "adapter": "\"CodeLLDB \u012A \n\r foo\b\b \f \\ \"bar\"",
+      "variables": {
+        "_buildit": {
+          "shell": [ "jai", "${file}", "-import_dir", "modules" ]
+        }
+      },
+      "configuration": {
+        "request": "launch",
+        "program": "${workspaceRoot}/${fileBasenameNoExtension}",
+        "args": [ "*${Arguments}" ],
+        "cwd": "${workspaceRoot}",
+        "expressions": "native",
+        "initCommands": [
+          "command script import $HOME/Development/jai/lldb-jai/jaitype.py"
+        ]
+      }
+    }
+  }
+}
