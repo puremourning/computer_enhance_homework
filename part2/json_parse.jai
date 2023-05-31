@@ -121,9 +121,7 @@ parse_value :: ( using parser : *Parser ) -> Value, Parse_Result {
     }
     case; {
       // check if it looks like a number, else error
-      if is_digit( data[ pos ] ) ||
-         data[ pos ] == #char "-" ||
-         data[ pos ] == #char "+" {
+      if is_digit( data[ pos ] ) || data[ pos ] == #char "-" {
         value, parse_result = parse_number( parser );
       } else if data[ pos ] == #char "t" || data[ pos ] == #char "f" {
         value, parse_result = parse_boolean( parser );
