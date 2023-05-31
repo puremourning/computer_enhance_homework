@@ -1,11 +1,11 @@
 {
     "workspaces": [
         {
-            "entry": "/generator.jai",
+            "entry": "/calculator.jai",
             "local_modules": "/modules"
         },
         {
-            "entry": "/calculator.jai",
+            "entry": "/generator.jai",
             "local_modules": "/modules"
         }
     ]

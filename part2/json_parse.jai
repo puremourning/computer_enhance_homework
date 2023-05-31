@@ -14,11 +14,13 @@ Value :: struct {
     ARRAY;
   } = .NULL;
 
-  str\_val: string;
-  num\_val: float64; #place str_val;
-  obj\_val: *Object; #place str_val;
-  arr\_val: Array; #place str_val;
-  bool_val: bool; #place str_val;
+  union {
+    str_val: string;
+    num_val: float64;
+    obj_val: *Object;
+    arr_val: Array;
+    bool_val: bool;
+  }
 }
 
 Parser :: struct {
@@ -28,7 +30,12 @@ Parser :: struct {
 }
 
 Parse_Result :: struct {
-  failed: bool; // negative so 0-init means "OK"
+  // negative so 0-init means "OK"
+  failed: bool;
+}
+
+Parse_Error :: struct {
+  #as result: Parse_Result;
   pos : s64;
   message : string;
 }
@@ -88,8 +95,8 @@ eat_if_token :: inline ( using parser: *Parser, token: u8 ) -> bool {
 }
 
 failed :: inline ( using parser: *Parser, message: string ) -> Parse_Result {
-  return Parse_Result.{
-    failed = true,
+  return Parse_Error.{
+    result.failed = true,
     pos = pos,
     message = message,
   };
@@ -132,6 +139,7 @@ parse_value :: ( using parser : *Parser ) -> Value, Parse_Result {
       }
     }
   }
+
   return value, parse_result;
 }
 
@@ -174,7 +182,7 @@ parse_object :: ( using parser : *Parser ) -> Value, Parse_Result {
   }
 
   if ate_comma && value.obj_val.count > 0 {
-      return .{}, failed( parser, "extra comma after last object member" );
+    return .{}, failed( parser, "extra comma after last object member" );
   }
 
   return value, ok( parser );

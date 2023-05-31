@@ -27,14 +27,15 @@ main :: () {
   val, parse_result := parse_value( *parser );
 
   if parse_result.failed {
+    parse_error := cast( *Parse_Error ) *parse_result;
     print( "Failed to parse the JSON: % around %\n",
-           parse_result.message,
-           parse_result.pos );
+           parse_error.message,
+           parse_error.pos );
     return;
   }
 
   print( "Result is a %\n", val.kind );
-  
+
   // now read the parts we want
   if val.kind != .OBJECT {
     print( "Expecting an object\n" );
@@ -73,7 +74,7 @@ main :: () {
   print_context.print_style.default_format_float.trailing_width = 17;
   print_context.print_style.default_format_float.mode = .SHORTEST;
   push_context print_context {
-  sum : float64 = 0;
+    sum : float64 = 0;
     for points.arr_val {
       if it.kind != .OBJECT {
         print( "Expected each element to be an object\n" );
@@ -89,12 +90,10 @@ main :: () {
         return;
       }
 
-      distance := basic_haversine_distance( Segment. {
-        x0.num_val,
-        y0.num_val,
-        x1.num_val,
-        y1.num_val,
-      } );
+      distance := basic_haversine_distance( .{ x0.num_val,
+                                               y0.num_val,
+                                               x1.num_val,
+                                               y1.num_val, } );
       if it_index >= distances.count {
         print( "Too many entries (%) for the distances file; do they match ?\n",
                it_index + 1 );
@@ -111,9 +110,10 @@ main :: () {
       sum += distance;
     }
 
-    print( "The sum was %\n", sum );
     if sum != expected_sum {
-      print( "The sum did not match expected %\n", expected_sum );
+      print( "The sum did not match expected % != %\n", sum, expected_sum );
+    } else {
+      print( "The sum was as expected: %\n", sum );
     }
   }
 }
