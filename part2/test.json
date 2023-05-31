@@ -20,6 +20,13 @@
         ]
       }
     },
-    "Run2":{"bool": true,"null": null,"adapter":"\"CodeLLDB \u012A \n\r foo\b\b \f \\ \"bar\""}
+    "Run2":{"bool": true,"null": null,"adapter":"\"CodeLLDB \u012A \n\r foo\b\b \f \\ \"bar\""},
+    "Foo": "x",
+    "Hetero": [
+      { "foo": true },
+      { "bar": [ 1, 2, 3,4  ] },
+      10,
+      "foood"
+    ]
   }
 }

@@ -107,6 +107,8 @@ parse_value :: ( using parser : *Parser ) -> Value, Parse_Result {
 
   value: Value;
   parse_result: Parse_Result;
+
+  // peek at the token to see what to parse
   if data[ pos ] == {
     case #char "{"; {
       value, parse_result = parse_object( parser );
@@ -128,7 +130,7 @@ parse_value :: ( using parser : *Parser ) -> Value, Parse_Result {
       } else if data[ pos ] == #char "n" {
         value, parse_result = parse_null( parser );
       } else {
-        parse_result = failed( parser, "Expected a number" );
+        parse_result = failed( parser, "Unrecognised value" );
       }
     }
   }
