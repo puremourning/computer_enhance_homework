@@ -26,9 +26,10 @@ main :: () {
   val, parse_result := parse_value( *parser );
 
   if parse_result.failed {
+    parse_error := cast( *Parse_Error ) *parse_result;
     print( "Failed to parse the JSON: % around %\n",
-           parse_result.message,
-           parse_result.pos );
+           parse_error.message,
+           parse_error.pos );
     return;
   }
 
