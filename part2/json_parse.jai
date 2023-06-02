@@ -235,35 +235,15 @@ parse_string :: ( using parser : *Parser ) -> Value, Parse_Result {
       if is_escaped {
         is_escaped = false;
         if data[ pos ] == {
-          case #char "\"";
-            #through;
-          case #char "\\";
-            #through;
-          case #char "/"; {
-            append( *builder, data[ pos ] );
-            advance( parser );
-          }
+          case #char "\""; #through;
+          case #char "\\"; #through;
+          case #char "/"; append( *builder, data[ pos ] ); advance( parser );
 
-          case #char "b"; {
-            append( *builder, BACKSPACE );
-            advance( parser );
-          }
-          case #char "f"; {
-            append( *builder, FORMFEED );
-            advance( parser );
-          }
-          case #char "n"; {
-            append( *builder, #char "\n" );
-            advance( parser );
-          }
-          case #char "r"; {
-            append( *builder, #char "\r" );
-            advance( parser );
-          }
-          case #char "t"; {
-            append( *builder, #char "\t" );
-            advance( parser );
-          }
+          case #char "b"; append( *builder, BACKSPACE ); advance( parser );
+          case #char "f"; append( *builder, FORMFEED ); advance( parser );
+          case #char "n"; append( *builder, #char "\n" ); advance( parser );
+          case #char "r"; append( *builder, #char "\r" ); advance( parser );
+          case #char "t"; append( *builder, #char "\t" ); advance( parser );
           case #char "u"; {
             // eat this "u"
             advance( parser );
@@ -388,7 +368,6 @@ parse_number :: ( using parser : *Parser ) -> Value, Parse_Result {
   }
 
   if !parse_digits( parser, *number ) {
-    // TODO: Is it legal to have nothing before the decimal point?
     return .{}, failed( parser, "Expected digits in number" );
   }
 
@@ -401,9 +380,8 @@ parse_number :: ( using parser : *Parser ) -> Value, Parse_Result {
 
   // exponent
   if eat_if_token( parser, #char "e" ) ||
-     eat_if_token( parser, #char "E" ) {
+    eat_if_token( parser, #char "E" ) {
     number.count += 1;
-    // TODO: is + valid in this position?
     if eat_if_token( parser, #char "-" ) || eat_if_token( parser, #char "+" ) {
       number.count += 1;
     }
@@ -412,8 +390,9 @@ parse_number :: ( using parser : *Parser ) -> Value, Parse_Result {
     }
   }
 
-  // TODO: replace this and just calculate it yourself. you already have all the
-  // code required.
+  // maybe replace this and just calculate it yourself. you already have all the
+  // code required, though the actual algorithm implemented below is its own
+  // project. Not sure that i care too much about that..
   value.num_val = string_to_float64( number );
   return value, ok( parser );
 }
